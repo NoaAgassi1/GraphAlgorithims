@@ -1,3 +1,4 @@
+//agassinoa20@gmail.com
 #include "Algorithms.hpp"
 #include <iostream>  
 enum State { UNDISCOVERED, DISCOVERED, PROCESSED };

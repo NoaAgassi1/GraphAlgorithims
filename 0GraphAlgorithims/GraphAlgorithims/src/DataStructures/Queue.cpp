@@ -1,3 +1,4 @@
+//agassinoa20@gmail.com
 #include "DataStructures/Queue.hpp"
 #include <stdexcept>
 
