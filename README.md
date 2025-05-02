@@ -2,7 +2,8 @@
 
 ## About the Project
 
-This project was built to implement classic graph algorithms and supporting data structures in C++, without relying on STL containers. It demonstrates how these algorithms operate internally, using custom-built components for full control and understanding.
+This project was built to implement classic graph algorithms and supporting data structures in C++, without relying on STL containers. 
+It demonstrates how these algorithms operate internally, using custom-built components for full control and understanding.
 
 ---
 
