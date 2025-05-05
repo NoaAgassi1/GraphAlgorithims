@@ -101,7 +101,7 @@ sudo apt install valgrind
 
 ---
 
-### ➤ 5. Clean All Generated Files
+### ➤ 4. Clean All Generated Files
 
 To remove all compiled executables and object files:
 
@@ -110,50 +110,6 @@ make clean
 ```
 ---
 
-### Run Unit Tests
-
-There are two sets of tests using the `doctest` framework:
-
-```bash
-make run-tests-algo
-```
-Runs the tests in `tests/test_algorithms.cpp` to verify correctness of BFS, DFS, Dijkstra, Prim, and Kruskal.
-
-```bash
-make run-tests-ds
-```
-Runs the tests in `tests/test_data_structures.cpp` to validate Queue, PriorityQueue, Stack, and UnionFind behavior.
-
----
-
-###  Clean the Build
-
-```bash
-make clean
-```
-Removes all generated executables.
-
----
-
-###  Memory Leak Check with Valgrind
-
-To make sure there are no memory leaks, run:
-
-```bash
-make valgrind
-```
-
-This compiles the project and runs it with:
-
-```bash
-valgrind --leak-check=full --track-origins=yes ./graph_program
-```
-
-If Valgrind is not installed:
-
-```bash
-sudo apt install valgrind
-```
 
 ---
 
