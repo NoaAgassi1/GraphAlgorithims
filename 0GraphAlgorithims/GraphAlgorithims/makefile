@@ -38,13 +38,11 @@ $(TEST_TARGET_ALGO): $(SRC_FILES) $(TEST_FILE_ALGO)
 
 # ------------------------ SHORTCUTS ------------------------
 
-run: $(TARGET)
+Main: $(TARGET)
 	./$(TARGET)
 
-run-tests-ds: $(TEST_TARGET_DS)
+test: $(TEST_TARGET_DS) $(TEST_TARGET_ALGO)
 	./$(TEST_TARGET_DS)
-
-run-tests-algo: $(TEST_TARGET_ALGO)
 	./$(TEST_TARGET_ALGO)
 
 valgrind: $(TARGET)
