@@ -53,7 +53,7 @@ GraphAlgorithims/
 This will compile `main.cpp` along with all required source files and run the demo of all algorithms:
 
 ```bash
-make run
+make Main
 ```
 
 You should see printed output showing:
@@ -67,31 +67,19 @@ You should see printed output showing:
 
 ---
 
-### ➤ 2. Run Algorithm Unit Tests
+### ➤ 2. Run All Unit Tests
 
-To compile and run tests for the graph algorithms:
+To compile and run tests:
 
 ```bash
-make run-tests-algo
+make test
 ```
 
-This runs `tests/test_algorithms.cpp` and checks that all algorithm outputs are correct.
 
 ---
 
-### ➤ 3. Run Data Structures Unit Tests
 
-To test the custom-built data structures (Queue, Stack, PriorityQueue, UnionFind):
-
-```bash
-make run-tests-ds
-```
-
-This runs `tests/test_data_structures.cpp` with various correctness checks.
-
----
-
-### ➤ 4. Run with Valgrind to Check for Memory Leaks
+### ➤ 3. Run with Valgrind to Check for Memory Leaks
 
 This will run the main program under Valgrind's memory analysis:
 
