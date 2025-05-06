@@ -1,4 +1,3 @@
-//agassinoa20@gmail.com
 # ------------------------ COMPILER AND FLAGS ------------------------
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude
@@ -30,6 +29,7 @@ all: $(TARGET)
 $(TARGET): $(SRC_FILES) $(MAIN_FILE)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC_FILES) $(MAIN_FILE)
 
+# חשוב: השמות האלו חייבים להיות בדיוק השמות של ה-Targets
 $(TEST_TARGET_DS): $(SRC_FILES) $(TEST_FILE_DS)
 	$(CXX) $(CXXFLAGS) -o $(TEST_TARGET_DS) $(SRC_FILES) $(TEST_FILE_DS)
 
@@ -42,8 +42,7 @@ Main: $(TARGET)
 	./$(TARGET)
 
 test: $(TEST_TARGET_DS) $(TEST_TARGET_ALGO)
-	./$(TEST_TARGET_DS)
-	./$(TEST_TARGET_ALGO)
+	./$(TEST_TARGET_DS) ./$(TEST_TARGET_ALGO)
 
 valgrind: $(TARGET)
 	valgrind --leak-check=full --track-origins=yes ./$(TARGET)
