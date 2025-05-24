@@ -29,7 +29,6 @@ all: $(TARGET)
 $(TARGET): $(SRC_FILES) $(MAIN_FILE)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC_FILES) $(MAIN_FILE)
 
-# חשוב: השמות האלו חייבים להיות בדיוק השמות של ה-Targets
 $(TEST_TARGET_DS): $(SRC_FILES) $(TEST_FILE_DS)
 	$(CXX) $(CXXFLAGS) -o $(TEST_TARGET_DS) $(SRC_FILES) $(TEST_FILE_DS)
 
