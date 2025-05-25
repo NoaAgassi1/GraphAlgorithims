@@ -40,8 +40,9 @@ $(TEST_TARGET_ALGO): $(SRC_FILES) $(TEST_FILE_ALGO)
 Main: $(TARGET)
 	./$(TARGET)
 
-test: $(TEST_TARGET_DS) $(TEST_TARGET_ALGO)
-	./$(TEST_TARGET_DS) ./$(TEST_TARGET_ALGO)
+test: $(TEST_TARGET_DS) $(TEST_TARGET_ALGO) 
+	./$(TEST_TARGET_DS) --success
+	./$(TEST_TARGET_ALGO) --success
 
 valgrind: $(TARGET)
 	valgrind --leak-check=full --track-origins=yes ./$(TARGET)
