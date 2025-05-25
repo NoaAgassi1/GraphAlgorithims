@@ -1,90 +1,73 @@
 //agassinoa20@gmail.com
 #include "Algorithms.hpp"
 #include <iostream>  
-enum State { UNDISCOVERED, DISCOVERED, PROCESSED };
 
 namespace algo {
 
-    graph::Graph Algorithms::bfs(const graph::Graph& original, int source) {
-        int vertexCount = original.getNumVertices();
-    
-        if (source < 0 || source >= vertexCount) {
-            throw std::runtime_error("Source vertex is out of range");
+    graph::Graph Algorithms::bfs(const graph::Graph& g, int startVertex) {
+        int n = g.getNumVertices();
+        if (startVertex < 0 || startVertex >= n) {
+            throw std::runtime_error("Invalid start vertex");
         }
-    
-        graph::Graph bfsTree(vertexCount);
-        State* state = new State[vertexCount];
-    
-        for (int i = 0; i < vertexCount; ++i) {
-            state[i] = UNDISCOVERED;
+        graph::Graph tree(n);  // This will hold the BFS tree
+        //visited array
+        bool* visited = new bool[n];
+        for (int i = 0; i < n; ++i) {
+            visited[i] = false;
         }
-    
-        ds::Queue queue(vertexCount);
-        queue.enqueue(source);
-        state[source] = DISCOVERED;
-    
-        while (!queue.isEmpty()) {
-            int current = queue.dequeue();
-            graph::Neighbor* neighbor = original.getAdjList()[current];
-    
+        ds::Queue q(n);  // assuming constructor gets capacity
+        q.enqueue(startVertex);
+        visited[startVertex] = true;
+        //BFS loop
+        while (!q.isEmpty()) {
+            int current = q.dequeue();
+            // Go through all neighbors of current
+            graph::Neighbor* neighbor = g.getAdjList()[current];
             while (neighbor != nullptr) {
-                int target = neighbor->vertex;
-    
-                if (state[target] == UNDISCOVERED) {
-                    state[target] = DISCOVERED;
-                    bfsTree.addEdge(current, target, neighbor->weight);
-                    queue.enqueue(target);
+                int v = neighbor->vertex;
+                if (!visited[v]) {
+                    visited[v] = true;
+                    tree.addEdge(current, v, neighbor->weight); // Add edge to BFS tree
+                    q.enqueue(v);
                 }
-    
                 neighbor = neighbor->next;
             }
-    
-            state[current] = PROCESSED;
         }
     
-        delete[] state;
-        return bfsTree;
+        delete[] visited;
+        return tree;
     }
-    
-    
 
-    void dfsRecursive(const graph::Graph& graph, int current, State* state, graph::Graph& tree) {
-        state[current] = DISCOVERED;
+    // Helper recursive function
+    void dfsVisit(const graph::Graph& g, int u, bool* visited, graph::Graph& tree) {
+        visited[u] = true;
 
-        graph::Neighbor* adj = graph.getAdjList()[current];
-        while (adj != nullptr) {
-            int next = adj->vertex;
-            if (state[next] == UNDISCOVERED) {
-                tree.addEdge(current, next, adj->weight);
-                dfsRecursive(graph, next, state, tree);
+        graph::Neighbor* neighbor = g.getAdjList()[u];
+        while (neighbor != nullptr) {
+            int v = neighbor->vertex;
+            if (!visited[v]) {
+                tree.addEdge(u, v, neighbor->weight);  // tree edge
+                dfsVisit(g, v, visited, tree);         // recurse
             }
-            adj = adj->next;
+            neighbor = neighbor->next;
         }
-
-        state[current] = PROCESSED;
     }
 
-    graph::Graph Algorithms::dfs(const graph::Graph& input, int start) {
-        int totalVertices = input.getNumVertices();
-
-        if (start < 0 || start >= totalVertices) {
-            throw std::runtime_error("Invalid start vertex for DFS");
+    graph::Graph Algorithms::dfs(const graph::Graph& g, int startVertex) {
+        int n = g.getNumVertices();
+        if (startVertex < 0 || startVertex >= n) {
+            throw std::runtime_error("Invalid start vertex");
         }
-
-        graph::Graph dfsTree(totalVertices);
-        State* state = new State[totalVertices];
-
-        for (int i = 0; i < totalVertices; ++i) {
-            state[i] = UNDISCOVERED;
+        graph::Graph tree(n);
+        bool* visited = new bool[n];
+        for (int i = 0; i < n; ++i) {
+            visited[i] = false;
         }
+        dfsVisit(g, startVertex, visited, tree);
 
-        dfsRecursive(input, start, state, dfsTree);
-
-        delete[] state;
-        return dfsTree;
+        delete[] visited;
+        return tree;
     }
-
-
 
     
 graph::Graph Algorithms::dijkstra(const graph::Graph& g, int startVertex) {
@@ -93,6 +76,16 @@ graph::Graph Algorithms::dijkstra(const graph::Graph& g, int startVertex) {
     // Validate input
     if (startVertex < 0 || startVertex >= n) {
         throw std::runtime_error("Invalid start vertex");
+    }
+    
+     for (int u = 0; u < n; ++u) {
+        graph::Neighbor* neighbor = g.getAdjList()[u];
+        while (neighbor != nullptr) {
+            if (neighbor->weight < 0) {
+                throw std::invalid_argument("Dijkstra cannot handle negative edge weights");
+            }
+            neighbor = neighbor->next;
+        }
     }
     const int INF = 100000000;
     // distance[i]: shortest known distance from startVertex to i
@@ -110,11 +103,11 @@ graph::Graph Algorithms::dijkstra(const graph::Graph& g, int startVertex) {
 
     distance[startVertex] = 0;
 
-    ds::PriorityQueue q(n);
-    q.insert(startVertex, 0);  // (vertex, priority)
+    ds::PriorityQueue pq(n);
+    pq.insert(startVertex, 0);  // (vertex, priority)
 
-    while (!q.isEmpty()) {
-        int u = q.extractMin();  // vertex with smallest distance
+    while (!pq.isEmpty()) {
+        int u = pq.extractMin();  // vertex with smallest distance
 
         // Skip if already processed
         if (processed[u])
@@ -129,9 +122,8 @@ graph::Graph Algorithms::dijkstra(const graph::Graph& g, int startVertex) {
             if (!processed[v] && distance[u] + weight < distance[v]) {
                 distance[v] = distance[u] + weight;
                 parent[v] = u;
-                q.insert(v, distance[v]);
+                pq.insert(v, distance[v]);
             }
-
             neighbor = neighbor->next;
         }
     }
@@ -153,76 +145,69 @@ graph::Graph Algorithms::dijkstra(const graph::Graph& g, int startVertex) {
 }
 
 graph::Graph Algorithms::prim(const graph::Graph& g) {
-    const int V = g.getNumVertices();
+    int n = g.getNumVertices();
     const int INF = 1000000000;
 
-    // This will store the resulting MST
-    graph::Graph mst(V);
-
-    // Arrays to track vertex states
-    int* cost = new int[V];        // Minimum edge weight to reach each vertex
-    int* source = new int[V];      // From which vertex we reached the current one
-    bool* added = new bool[V];     // Whether a vertex is already included in the MST
+    // Arrays for tracking the MST construction
+    bool* inMST = new bool[n];   // Whether vertex is already included in the MST
+    int* key = new int[n];       // Minimum weight to connect vertex to MST
+    int* parent = new int[n];    // From which vertex we reached this one
 
     // Initialization
-    int i = 0;
-    while (i < V) {
-        cost[i] = INF;
-        source[i] = -1;
-        added[i] = false;
-        ++i;
+    for (int i = 0; i < n; ++i) {
+        inMST[i] = false;
+        key[i] = INF;
+        parent[i] = -1;
     }
-
     // Start from vertex 0
-    cost[0] = 0;
-    ds::PriorityQueue queue(V);
-    queue.insert(0, 0);  // Insert with priority = 0
+    key[0] = 0;
+    ds::PriorityQueue pq(n);
+    pq.insert(0, 0);  // (vertex, priority = weight)
 
-    while (!queue.isEmpty()) {
-        int curr = queue.extractMin();
+    while (!pq.isEmpty()) {
+        int u = pq.extractMin();
 
-        if (added[curr])
+        // Skip if already processed
+        if (inMST[u])
             continue;
 
-        added[curr] = true;
+        inMST[u] = true;
+        // Traverse neighbors of u
+        graph::Neighbor* neighbor = g.getAdjList()[u];
+        while (neighbor != nullptr) {
+            int v = neighbor->vertex;
+            int weight = neighbor->weight;
 
-        // If this is not the first vertex, add the edge to MST
-        if (source[curr] != -1) {
-            mst.addEdge(source[curr], curr, cost[curr]);
-        }
-
-        // Traverse all neighbors of the current vertex
-        graph::Neighbor* ptr = g.getAdjList()[curr];
-        while (ptr != nullptr) {
-            int neighbor = ptr->vertex;
-            int weight = ptr->weight;
-
-            // If neighbor is not in MST and edge is lighter, update it
-            if (!added[neighbor] && weight < cost[neighbor]) {
-                cost[neighbor] = weight;
-                source[neighbor] = curr;
-                queue.insert(neighbor, weight);
+            // If v is not in MST and weight is better, update it
+            if (!inMST[v] && weight < key[v]) {
+                key[v] = weight;
+                parent[v] = u;
+                pq.insert(v, key[v]);  // insert with new lower priority
             }
-
-            ptr = ptr->next;
+            neighbor = neighbor->next;
         }
     }
-
-    // Clean up dynamic memory
-    delete[] cost;
-    delete[] source;
-    delete[] added;
+    // Construct the MST graph from parent[]
+    graph::Graph mst(n);
+    for (int v = 1; v < n; ++v) {
+        if (parent[v] != -1) {
+            mst.addEdge(parent[v], v, key[v]);
+        }
+    }
+    // Clean up
+    delete[] inMST;
+    delete[] key;
+    delete[] parent;
 
     return mst;
 }
-
 
 
 struct FullEdge {
     int src, dest,weight;
 };
 
-// Bubble sort the edges array by weight
+// Bubble sort the edges array by weight (ascending)
 void sortEdges(FullEdge* edges, int count) {
     for (int i = 0; i < count - 1; ++i) {
         for (int j = 0; j < count - i - 1; ++j) {
@@ -258,13 +243,15 @@ graph::Graph Algorithms::kruskal(const graph::Graph& g){
             neighbor = neighbor->next;
         }
     }
+
+    //Sort edges by weight (ascending)
     sortEdges(edges, edgeCount);
 
     //Initialize Union-Find to track connected components
     ds::UnionFind uf(n);
     int added = 0;
 
-    //Add edges to MST as long as they don't form a cycle
+    // Step 4: Add edges to MST as long as they don't form a cycle
     for (int i = 0; i < edgeCount && added < n - 1; ++i) {
         int u = edges[i].src;
         int v = edges[i].dest;
@@ -275,6 +262,7 @@ graph::Graph Algorithms::kruskal(const graph::Graph& g){
             added++;
         }
     }
+
     delete[] edges;
     return mst;
 }
