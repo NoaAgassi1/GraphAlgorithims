@@ -29,18 +29,27 @@ namespace graph{
     }
 
    
-    void Graph::addEdge(int src, int dest, int weight) {
+   void Graph::addEdge(int src, int dest, int weight) {
         // Check that the source and destination vertices are within valid bounds
         if (src < 0 || src >= numVertices || dest < 0 || dest >= numVertices) {
             throw std::out_of_range("Invalid vertex index");
         }
-        // Undirected
-        Neighbor* edgeToDest = new Neighbor{dest, weight, adjList[src]};
-        adjList[src] = edgeToDest;
-        Neighbor* edgeToSrc = new Neighbor{src, weight, adjList[dest]};
-        adjList[dest] = edgeToSrc;
+         // Check if edge already exists from src to dest
+        Neighbor* curr = adjList[src];
+        while (curr != nullptr) {
+            if (curr->vertex == dest) {
+                throw std::invalid_argument("Edge already exists");
+            }
+            curr = curr->next;
+        }
+        //Create a new neighbor node for dest and add it to the front of src's list
+        Neighbor* newNeighbor_d = new Neighbor{dest, weight, adjList[src]};
+        adjList[src] = newNeighbor_d;
+    
+        //the graph is undirected, also add a node for src to dest's list
+        Neighbor* newNeighbor_src = new Neighbor{src, weight, adjList[dest]};
+        adjList[dest] = newNeighbor_src;
     }
-
 
     void Graph::removeSingleEdge(int from, int to){
         Neighbor *current = adjList[from];
