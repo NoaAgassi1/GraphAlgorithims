@@ -1,7 +1,6 @@
 //agassinoa20@gmail.com
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
-#include <iostream>
 
 namespace graph{
 
