@@ -1,7 +1,7 @@
 //agassinoa20@gmail.com
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
-
+#include "Exceptions.hpp"
 #include "DataStructures/Queue.hpp"
 #include "DataStructures/Stack.hpp"
 #include "DataStructures/PriorityQueue.hpp"
@@ -19,7 +19,7 @@ TEST_CASE("Queue - basic operations") {
     CHECK(q.peek() == 20);
     q.dequeue();
     CHECK(q.isEmpty());
-    CHECK_THROWS_AS(q.dequeue(), std::underflow_error);
+    CHECK_THROWS_AS(q.dequeue(), SimpleException);
 }
 
 TEST_CASE("Queue - wrap-around behavior") {
@@ -50,10 +50,10 @@ TEST_CASE("Stack - basic operations") {
     CHECK(s.isEmpty());
     s.push(42);
     s.push(99);
-    CHECK_THROWS_AS(s.push(100), std::overflow_error);
+    CHECK_THROWS_AS(s.push(100), SimpleException);
     CHECK(s.pop() == 99);
     CHECK(s.pop() == 42);
-    CHECK_THROWS_AS(s.pop(), std::underflow_error);
+    CHECK_THROWS_AS(s.pop(), SimpleException);
 }
 
 TEST_CASE("Stack - top returns latest") {
@@ -96,13 +96,13 @@ TEST_CASE("PriorityQueue - decreaseKey updates priority") {
 TEST_CASE("PriorityQueue - decreaseKey to higher priority throws") {
     ds::PriorityQueue pq(2);
     pq.insert(1, 10);
-    CHECK_THROWS_AS(pq.decreaseKey(1, 15), std::runtime_error);
+    CHECK_THROWS_AS(pq.decreaseKey(1, 15), SimpleException);
 }
 
 TEST_CASE("PriorityQueue - decreaseKey on non-existing element throws") {
     ds::PriorityQueue pq(2);
     pq.insert(1, 10);
-    CHECK_THROWS_AS(pq.decreaseKey(42, 5), std::runtime_error);
+    CHECK_THROWS_AS(pq.decreaseKey(42, 5), SimpleException);
 }
 
 // -------------------- UnionFind --------------------
@@ -126,8 +126,8 @@ TEST_CASE("UnionFind - unite same element") {
 
 TEST_CASE("UnionFind - find on invalid index throws") {
     ds::UnionFind uf(3);
-    CHECK_THROWS_AS(uf.find(-1), std::runtime_error);
-    CHECK_THROWS_AS(uf.find(3), std::runtime_error);
+    CHECK_THROWS_AS(uf.find(-1), SimpleException);
+    CHECK_THROWS_AS(uf.find(3), SimpleException);
 }
 
 TEST_CASE("UnionFind - transitive connectivity") {
