@@ -1,13 +1,13 @@
 //agassinoa20@gmail.com
 #include "DataStructures/UnionFind.hpp"
-#include <stdexcept>
+#include "Exceptions.hpp"
 
 namespace ds {
 
 // Constructor: initialize n elements, each in its own set
 UnionFind::UnionFind(int n) : size(n) {
     if (n <= 0) {
-        throw std::runtime_error("Size must be positive");
+        throw SimpleException("Size must be positive");
     }
 
     parent = new int[n];
@@ -57,7 +57,7 @@ UnionFind& UnionFind::operator=(const UnionFind& other) {
 // Find with path compression
 int UnionFind::find(int x) {
     if (x < 0 || x >= size) {
-        throw std::runtime_error("Invalid element index");
+        throw SimpleException("Invalid element index");
     }
     if (parent[x] != x) {
         parent[x] = find(parent[x]);
