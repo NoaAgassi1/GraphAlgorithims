@@ -1,6 +1,6 @@
 //agassinoa20@gmail.com
 #include "DataStructures/PriorityQueue.hpp"
-#include <stdexcept>
+#include "Exceptions.hpp"
 #include <utility>  
 
 namespace ds{
@@ -15,10 +15,10 @@ namespace ds{
         delete[] priorities;
     }
 
-    //Insert a new vertex with a given priority
+    // Insert a new vertex with a given priority
     void PriorityQueue::insert(int vertex, int priority) {
         if (capacity == count){
-            throw std::overflow_error("overflow");
+            throw SimpleException("overflow");
         }
         vertices[count] = vertex;
         priorities[count] = priority;
@@ -26,15 +26,15 @@ namespace ds{
         count++;
     }
 
-    //Extract the vertex with the minimum priority
+    // Extract the vertex with the minimum priority
     int PriorityQueue::extractMin() {
         if (isEmpty()) {
-            throw std::underflow_error("Queue is empty");
+            throw SimpleException("Queue is empty");
         }
     
         int result = vertices[0];
     
-        //Move last to root and fix heap
+        // Move last to root and fix heap
         vertices[0] = vertices[count - 1];
         priorities[0] = priorities[count - 1];
         count--;
@@ -47,14 +47,14 @@ namespace ds{
         for (int i = 0; i < count; ++i) {
             if (vertices[i] == value) {
                 if (newPriority >= priorities[i]) {
-                    throw std::runtime_error("New priority is greater than current priority");
+                    throw SimpleException("New priority is greater than current priority");
                 }
                 priorities[i] = newPriority;
                 bubbleUp(i);
                 return;
             }
         }
-        throw std::runtime_error("Value not found");
+        throw SimpleException("Value not found");
     }
     
     // Restores the heap property by moving the element at `index` up the tree,
@@ -99,30 +99,36 @@ namespace ds{
     // allocating new memory and copying existing elements into it.
     void PriorityQueue::expand() {
         int newCap = capacity * 2;
-        int* newV = new int[newCap];
+        int* newVertices = new int[newCap];
         int* newPriorities = new int[newCap];
     
         for (int i = 0; i < count; ++i) {
-            newV[i] = vertices[i];
+            newVertices[i] = vertices[i];
             newPriorities[i] = priorities[i];
         }
     
         delete[] vertices;
         delete[] priorities;
     
-        vertices = newV;
+        vertices = newVertices;
         priorities = newPriorities;
         capacity = newCap;
     }
     
     void PriorityQueue::swap(int i, int j) {
-        std::swap(vertices[i], vertices[j]);
-        std::swap(priorities[i], priorities[j]);
+        int tmp = vertices[i];
+        vertices[i] = vertices[j];
+        vertices[j] = tmp;
+
+        int tmpW = priorities[i];
+        priorities[i] = priorities[j];
+        priorities[j] = tmpW;
     }
 
     int PriorityQueue::peekMin() const {
         if (isEmpty()) {
-            throw std::underflow_error("Queue is empty");}
+            throw SimpleException("Queue is empty");
+        }
         return vertices[0];
     }
     
