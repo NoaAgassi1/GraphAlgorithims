@@ -1,14 +1,14 @@
 //agassinoa20@gmail.com
-#include <iostream>
-#include <stdexcept>
+#include "Exceptions.hpp"
 #include "graph.hpp"
+#include <cstdio>
 
 
 namespace graph{
 
     Graph::Graph(int numofV) : numVertices(numofV){
         if (numVertices <= 0){
-            throw std::runtime_error("Number of vertices must be positive");
+            throw SimpleException("Number of vertices must be positive");
         }
         adjList = new Neighbor*[numVertices];
         for (int i = 0; i < numVertices; i++){
@@ -17,9 +17,11 @@ namespace graph{
     }
 
     Graph::~Graph(){
-        for (int i = 0; i < numVertices; i++){
+        for (int i = 0; i < numVertices; i++)
+        {
             Neighbor *current = adjList[i];
-            while (current != nullptr){
+            while (current != nullptr)
+            {
                 Neighbor *temp = current;
                 current = current->next;
                 delete temp;
@@ -29,16 +31,16 @@ namespace graph{
     }
 
    
-   void Graph::addEdge(int src, int dest, int weight) {
+    void Graph::addEdge(int src, int dest, int weight) {
         // Check that the source and destination vertices are within valid bounds
         if (src < 0 || src >= numVertices || dest < 0 || dest >= numVertices) {
-            throw std::out_of_range("Invalid vertex index");
+            throw SimpleException("Invalid vertex index");
         }
          // Check if edge already exists from src to dest
         Neighbor* curr = adjList[src];
         while (curr != nullptr) {
             if (curr->vertex == dest) {
-                throw std::invalid_argument("Edge already exists");
+                throw SimpleException("Edge already exists");
             }
             curr = curr->next;
         }
@@ -51,6 +53,7 @@ namespace graph{
         adjList[dest] = newNeighbor_src;
     }
 
+
     void Graph::removeSingleEdge(int from, int to){
         Neighbor *current = adjList[from];
         Neighbor *prev = nullptr;
@@ -60,7 +63,7 @@ namespace graph{
             current = current->next;
         }
 
-        if (current == nullptr) { throw std::runtime_error("Edge not found"); }
+        if (current == nullptr) { throw SimpleException("Edge not found"); }
 
         // The edge is the first in the list
         if (prev == nullptr){
@@ -73,25 +76,41 @@ namespace graph{
 
     void Graph::removeEdge(int src, int dest) {
         if (src < 0 || src >= numVertices || dest < 0 || dest >= numVertices) {
-            throw std::out_of_range("Invalid vertex index");
+            throw SimpleException("Invalid vertex index");
         }
         removeSingleEdge(src, dest);
         removeSingleEdge(dest, src);
     }
     
-    void Graph::print_graph() const {
-        std::cout << "Graph adjacency list:" << std::endl;
-        for (int i = 0; i < numVertices; ++i) {
-            std::cout << "Vertex " << i << ":";
+    // void Graph::print_graph() const {
+    //     std::cout << "Graph adjacency list:" << std::endl;
+    //     for (int i = 0; i < numVertices; ++i) {
+    //         std::cout << "Vertex " << i << ":";
     
-            Neighbor* current = adjList[i];
-            while (current != nullptr) {
-                std::cout << " -> (v: " << current->vertex << ", w: " << current->weight << ")";
-                current = current->next;
-            }
-            std::cout << std::endl;
+    //         Neighbor* current = adjList[i];
+    //         while (current != nullptr) {
+    //             std::cout << " -> (v: " << current->vertex << ", w: " << current->weight << ")";
+    //             current = current->next;
+    //         }
+    //         std::cout << std::endl;
+    //     }
+    // }
+    #include <cstdio>  // במקום <iostream>
+
+void Graph::print_graph() const {
+    printf("Graph adjacency list:\n");
+    for (int i = 0; i < numVertices; ++i) {
+        printf("Vertex %d:", i);
+
+        Neighbor* current = adjList[i];
+        while (current != nullptr) {
+            printf(" -> (v: %d, w: %d)", current->vertex, current->weight);
+            current = current->next;
         }
+        printf("\n");
     }
+}
+
     
     int Graph::getNumVertices() const {
         return numVertices;
