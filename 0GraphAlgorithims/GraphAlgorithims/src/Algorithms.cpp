@@ -1,13 +1,14 @@
 //agassinoa20@gmail.com
 #include "Algorithms.hpp"
-#include <iostream>  
+#include "Exceptions.hpp"
+ 
 
 namespace algo {
 
     graph::Graph Algorithms::bfs(const graph::Graph& g, int startVertex) {
         int n = g.getNumVertices();
         if (startVertex < 0 || startVertex >= n) {
-            throw std::runtime_error("Invalid start vertex");
+            throw SimpleException("Invalid start vertex");
         }
         graph::Graph tree(n);  // This will hold the BFS tree
         //visited array
@@ -56,7 +57,7 @@ namespace algo {
     graph::Graph Algorithms::dfs(const graph::Graph& g, int startVertex) {
         int n = g.getNumVertices();
         if (startVertex < 0 || startVertex >= n) {
-            throw std::runtime_error("Invalid start vertex");
+            throw SimpleException("Invalid start vertex");
         }
         graph::Graph tree(n);
         bool* visited = new bool[n];
@@ -75,14 +76,14 @@ graph::Graph Algorithms::dijkstra(const graph::Graph& g, int startVertex) {
 
     // Validate input
     if (startVertex < 0 || startVertex >= n) {
-        throw std::runtime_error("Invalid start vertex");
+        throw SimpleException("Invalid start vertex");
     }
     
      for (int u = 0; u < n; ++u) {
         graph::Neighbor* neighbor = g.getAdjList()[u];
         while (neighbor != nullptr) {
             if (neighbor->weight < 0) {
-                throw std::invalid_argument("Dijkstra cannot handle negative edge weights");
+                throw SimpleException("Dijkstra cannot handle negative edge weights");
             }
             neighbor = neighbor->next;
         }
