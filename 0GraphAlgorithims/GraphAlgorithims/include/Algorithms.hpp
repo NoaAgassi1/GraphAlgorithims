@@ -1,7 +1,6 @@
 //agassinoa20@gmail.com
 #ifndef ALGORITHMS_HPP
 #define ALGORITHMS_HPP
-
 #include "graph.hpp"
 #include "DataStructures/Queue.hpp"
 #include "DataStructures/Stack.hpp"
