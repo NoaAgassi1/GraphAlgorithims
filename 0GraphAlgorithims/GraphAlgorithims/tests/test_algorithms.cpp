@@ -266,8 +266,3 @@ TEST_CASE("Invalid source index throws") {
     CHECK_THROWS(Algorithms::bfs(g, -1));
     CHECK_THROWS(Algorithms::dijkstra(g, 5));
 }
-
-    Graph tree = Algorithms::kruskal(g);
-    CHECK(tree.getNumVertices() == 4);
-    CHECK(countUniqueEdges(tree) == 3);
-}
