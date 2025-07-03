@@ -1,32 +1,29 @@
 //agassinoa20@gmail.com
-#ifndef GRAPH_HPP
-#define GRAPH_HPP
+#ifndef QUEUE_HPP
+#define QUEUE_HPP
 
-namespace graph{
+namespace ds {
 
-    struct Neighbor {
-        int vertex;         
-        int weight;         
-        Neighbor* next;     
-    };
+class Queue {
+private:
+    int capacity;    // Maximum number of elements
+    int* arr;        // Array to store queue elements
+    int front;       // Index of front element
+    int rear;        // Index of last element
+    int count;       // Current size of the queue
 
-    class Graph{
-    private:
-        int numVertices;
-        Neighbor **adjList;
+public:
+    Queue(int cap = 100);   // Constructor with default capacity
+    ~Queue();               // Destructor
 
-    public:
-        Graph(int numofV);
-        ~Graph();
-        void addEdge(int src, int dest, int weight = 1);
-        void removeSingleEdge(int from, int to);
-        void removeEdge(int src, int dest);
-        void print_graph() const;
-        int getNumVertices() const;
-        Neighbor** getAdjList() const;
+    void enqueue(int value);
+    int dequeue();
+    int peek() const;
+    bool isFull() const;
+    bool isEmpty() const;
+    int size();
+};
 
-    };
+} 
 
-    }
-
-#endif
+#endif 
