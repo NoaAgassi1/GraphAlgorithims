@@ -82,20 +82,7 @@ namespace graph{
         removeSingleEdge(dest, src);
     }
     
-    // void Graph::print_graph() const {
-    //     std::cout << "Graph adjacency list:" << std::endl;
-    //     for (int i = 0; i < numVertices; ++i) {
-    //         std::cout << "Vertex " << i << ":";
-    
-    //         Neighbor* current = adjList[i];
-    //         while (current != nullptr) {
-    //             std::cout << " -> (v: " << current->vertex << ", w: " << current->weight << ")";
-    //             current = current->next;
-    //         }
-    //         std::cout << std::endl;
-    //     }
-    // }
-    #include <cstdio>  // במקום <iostream>
+
 
 void Graph::print_graph() const {
     printf("Graph adjacency list:\n");
